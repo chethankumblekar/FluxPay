@@ -4,16 +4,23 @@ using FluxPay.Payment.Domain.Exceptions;
 using FluxPay.Payment.Infrastructure;
 using FluxPay.Payment.Models;
 using Microsoft.EntityFrameworkCore;
+using Serilog.Core;
+using ILogger = Serilog.ILogger;
 
 namespace FluxPay.Payment.Services;
 
-public class PaymentService(PaymentDbContext db, IIdempotencyService idempotencyService, IFraudService fraudService) : IPaymentService
+public class PaymentService(PaymentDbContext db, IIdempotencyService idempotencyService, IFraudService fraudService, ILogger<PaymentService> _logger) : IPaymentService
 {
     public async Task<Domain.Payment> CreateAsync(
         string tenantId,
         string idempotencyKey,
         CreatePaymentRequest request)
     {
+        
+        _logger.LogInformation(
+            "Payment creation started | Tenant: {TenantId} | Amount: {Amount} | Currency: {Currency}",
+            tenantId, request.Amount, request.Currency);
+        
         var redisKey = $"payment:{tenantId}:{idempotencyKey}";
 
         var cached = await idempotencyService.GetAsync(redisKey);
@@ -86,6 +93,10 @@ public class PaymentService(PaymentDbContext db, IIdempotencyService idempotency
 
             await db.SaveChangesAsync();
             await transaction.CommitAsync();
+            
+            _logger.LogInformation(
+                "Payment created successfully | PaymentId: {PaymentId} | Tenant: {TenantId}",
+                payment.Id, tenantId);
 
             await idempotencyService.SetAsync(
                 redisKey,
@@ -105,6 +116,10 @@ public class PaymentService(PaymentDbContext db, IIdempotencyService idempotency
 
             if (fallback != null)
             {
+                _logger.LogInformation(
+                    "Idempotent replay detected | Tenant: {TenantId} | Key: {IdempotencyKey}",
+                    tenantId, idempotencyKey);
+                
                 await idempotencyService.SetAsync(
                     redisKey,
                     JsonSerializer.Serialize(fallback));
@@ -165,6 +180,8 @@ public class PaymentService(PaymentDbContext db, IIdempotencyService idempotency
 
             await db.SaveChangesAsync();
             await transaction.CommitAsync();
+            
+     
 
             return payment;
         }

@@ -41,7 +41,9 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled error");
+            _logger.LogError(ex,
+                "Unhandled exception while processing {Path}",
+                context.Request.Path);
 
             context.Response.StatusCode = 500;
 
