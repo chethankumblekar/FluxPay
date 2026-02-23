@@ -1,0 +1,10 @@
+.DS_Store
+Folder.DotSettings.user
+.idea/**
+backend/FluxPay.Payment/.idea/**
+backend/FluxPay.Payment/.vscode/**
+backend/FluxPay.Payment/.vs/**
+backend/FluxPay.Payment/bin/**
+backend/FluxPay.Payment/obj/**
+backend/FluxPay.Payment/global.json
+backend/FluxPay.Payment/fluxpay.db

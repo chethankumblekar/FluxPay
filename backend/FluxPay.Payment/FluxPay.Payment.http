@@ -1,0 +1,6 @@
+@FluxPay.Payment_HostAddress = http://localhost:5259
+
+GET {{FluxPay.Payment_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

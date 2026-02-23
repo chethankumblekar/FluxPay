@@ -1,0 +1,24 @@
+﻿version: "3.9"
+
+services:
+  api:
+    build: 
+      context: ./backend/Fluxpay.Payment
+    ports:
+      - "8080:8080"
+    environment:
+      - ConnectionStrings__SqlConnection=Server=tcp:YOUR_SERVER.database.windows.net,1433;Initial Catalog=fluxpaydb;User ID=fluxadmin;Password=YOUR_PASSWORD;Encrypt=True;
+      - Redis__Connection=redis:6379
+    depends_on:
+      - redis
+    volumes:
+      - fluxPay_data:/app/data
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  fluxPay_data:
+    
