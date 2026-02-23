@@ -1,0 +1,49 @@
+name: FluxPay CI
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  group: fluxpay-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    env:
+      DOTNET_VERSION: '10.0.x'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore backend/FluxPay.Payment.csproj
+
+      - name: Build
+        run: dotnet build backend/FluxPay.Payment.csproj --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test backend/FluxPay.Payment.csproj --configuration Release --no-build
+
+  docker:
+    name: Docker Build Validation
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t fluxpay-api backend
