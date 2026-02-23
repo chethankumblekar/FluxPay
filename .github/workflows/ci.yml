@@ -28,13 +28,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
-        run: dotnet restore backend/FluxPay.Payment.csproj
+        run: dotnet restore backend/FluxPay.Payment/FluxPay.Payment.csproj
 
       - name: Build
-        run: dotnet build backend/FluxPay.Payment.csproj --configuration Release --no-restore
+        run: dotnet build backend/FluxPay.Payment/FluxPay.Payment.csproj --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test backend/FluxPay.Payment.csproj --configuration Release --no-build
+        run: dotnet test backend/FluxPay.Payment/FluxPay.Payment.csproj --configuration Release --no-build
 
   docker:
     name: Docker Build Validation
