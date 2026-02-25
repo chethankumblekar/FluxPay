@@ -1,0 +1,6 @@
+subscription_id = "321d9c85-a043-4e32-b942-bd8fc4e1ebda"
+org         = "fp"
+workload    = "pay"
+environment = "dev"
+location    = "Central India"
+address_space = "10.0.0.0/16"

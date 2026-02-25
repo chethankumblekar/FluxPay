@@ -8,3 +8,13 @@ backend/FluxPay.Payment/bin/**
 backend/FluxPay.Payment/obj/**
 backend/FluxPay.Payment/global.json
 backend/FluxPay.Payment/fluxpay.db
+
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+terraform.tfvars
+*.tfvars
+backend.hcl
