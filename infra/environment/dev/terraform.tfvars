@@ -1,4 +1,4 @@
-subscription_id = "321d9c85-a043-4e32-b942-bd8fc4e1ebda"
+subscription_id = "Subscription_ID"
 org         = "fp"
 workload    = "pay"
 environment = "dev"
